@@ -2,8 +2,9 @@
 let choice = true
 let Clientes = []
 let Voos = []
-let Passagens = []
 let Pacotes = []
+let Passagens = []
+
 
 class Cliente {
     #Nome
@@ -41,15 +42,15 @@ class Cliente {
     }
 
     ExibirNomeCliente(){
-        return alert(`${this.#Nome}`)
+        return this.#Nome
     }
 
     ExibirCPFCliente(){
-        return alert(`${this.#CPF}`)
+        return this.#CPF
     }
 
     ExibirDataCliente(){
-        return alert(`${this.#DataNascimento}`)
+        return this.#DataNascimento
     }
 
     ExibirDadosCliente(){
@@ -87,7 +88,7 @@ class PacoteViagem{
     }
 
     DefinirValorTotal(valorTotal){
-        return this.#ValorTotalr = valorTotal
+        return this.#ValorTotal = valorTotal
     }
 
     ExibirTitular(){
@@ -110,7 +111,7 @@ class PacoteViagem{
 
 class Voo{
     #Empresa
-    #Numero
+    #Numero 
     #DataVoo
     #Horario
     #LocalPartida
@@ -150,27 +151,27 @@ class Voo{
     }
 
     ExibirEmpresa(){
-        return alert(`${this.#Empresa}`)
+        return this.#Empresa
     }
 
     ExibirNumero(){
-        return alert(`${this.#Numero}`)
+        return this.#Numero
     }
 
     ExibirDataVoo(){
-        return alert(`${this.#DataVoo}`)
+        return this.#DataVoo
     }
 
     ExibirHorario(){
-        return alert(`${this.#Horario}`)
+        return this.#Horario
     }
 
     ExibirLocalPartida(){
-        return alert(`${this.#LocalPartida}`)
+        return this.#LocalPartida
     }
 
     ExibirLocalDestino(){
-        return alert(`${this.#LocalDestino}`)
+        return this.#LocalDestino
     }
 }
 
@@ -194,12 +195,12 @@ class PassagemArea{
     }
 
     DefinirPrimeiraClasse(primeiraClasse){
-        if(typeof primeiraClasse == Boolean){
-            return this.#PrimeiraClasse = primeiraClasse
+        if(primeiraClasse == true){
+            return this.#PrimeiraClasse = true
         }
 
         else{
-            return
+            return this.#PrimeiraClasse = false
         }
     }
 
@@ -221,40 +222,40 @@ class PassagemArea{
     }
 
     ExibirAssento(){
-        return alert(`${this.#Assento}`)
+        return this.#Assento
     }
 
     ExibirPrimeiraClasse(){
-        return alert(`${this.#PrimeiraClasse}`)
+        return this.#PrimeiraClasse
     }
 
     ExibirValor(){
-        return alert(`${this.#Valor}`)
+        return this.#Valor
     }
 
     ExibirPassageiro(){
-        return alert(`${this.#Passageiro}`)
+        return this.#Passageiro
     }
 
     ExibirVoo(){
-        return alert(`${this.#Voo}`)
+        return this.#Voo
     }
 
     CalcularValor(){
-        if(this.PrimeiraClasse == true){
-            this.Valor = this.Valor * 1.50
-            return alert(`Valor Total: ${this.Valor}`)
+        if(this.#PrimeiraClasse == true){
+            let ValorTotal = Number(this.#Valor * 1.5)
+            return ValorTotal
         }
     }
 
     ExibirResumo(destino){
-        return alert(`Passageiro: ${this.Passageiro} No Assento: ${this.Assento} do Voo: ${this.Voo} Com Destino para: ${destino} !`)
+        return alert(`Passageiro: ${this.#Passageiro} No Assento: ${this.#Assento} do Voo: ${this.#Voo} Com Destino para: ${destino} !`)
     }
 }
 
 
 while(choice){
-    choice = prompt("1 Cadastrar Cliente /// 2 Cadastrar Voo /// 3 Comprar Passagem /// 4 Encerrar")
+    choice = prompt("1 Cadastrar Cliente /// 2 Cadastrar Voo /// 3 Comprar Passagem /// 4 Pacote De Viagem /// 5 Encerrar")
     switch(choice){
         case "1":
         CreateClient()
@@ -269,6 +270,10 @@ while(choice){
         break;
 
         case "4":
+        CreatePacoteViagem()
+        break;
+
+        case "5":
         choice = false
         break;
 
@@ -310,11 +315,15 @@ function CreateVoo(){
 }
 
 function CreatePassagemArea(){
+    let ExibirErro = 0
     if(Voos.length == 0 || Clientes.length == 0){
         return alert("Nenhum Voo ou Cliente Cadastrado")
     }
 
     let assento = Number(prompt("Qual o número do Assento ?"))
+
+    Passagens.forEach(VerificateAssento)
+
     let primeiraClasse = prompt("Primeira Classe ?")
 
     if(primeiraClasse == "Sim"){
@@ -330,32 +339,107 @@ function CreatePassagemArea(){
 
     Clientes.forEach(VerificateName)
 
+    if(ExibirErro == 0){
+        return alert("Nome Inválido")
+    }
+
     function VerificateName(item){
-        if(item.Nome != passageiro){
-            return alert("Nome inválido")
+        if(item.ExibirNomeCliente() == passageiro){
+            ExibirErro++
+            voo = prompt("Qual o número do Voo ?")
+
+            Voos.forEach(VerificateVoo)
         }
 
-        voo = prompt("Qual o número do Voo ?")
-
-        Voos.forEach(VerificateVoo)
     }
 
-    function VerificateVoo(item){
-        if(item.Numero != voo){
-            return alert("Número de Voo inválido")
-        }
+    function VerificateVoo(item, index){
+        if(item.ExibirNumero() == voo){
+            let Origem = item.ExibirLocalPartida()
+            let Destino = item.ExibirLocalDestino()
 
-        let Origem = item.LocalPartida
-        let Destino = item.LocalDestino
-
-        let NewPassagemArea = new PassagemArea(assento, primeiraClasse, valor, passageiro, voo)
-        let NewPacote = new PacoteViagem(passageiro, Origem, Destino, valor)
+            let NewPassagemArea = new PassagemArea(assento, primeiraClasse, valor, passageiro, voo)
+            let NewPacote = new PacoteViagem(passageiro, Origem, Destino, valor)
     
-        Pacotes.push(NewPacote)
-        Passagens.push(NewPassagemArea)
+            Pacotes.push(NewPacote)
+            Passagens.push(NewPassagemArea)
 
-        NewPassagemArea.CalcularValor()
-        NewPassagemArea.ExibirResumo(Destino)
+            alert(NewPassagemArea.CalcularValor())
+            NewPassagemArea.ExibirResumo(Destino)
+        }
+        else{
+            index++
+        }
+
+        
+
     }
+
+    function VerificateAssento(item){
+        if(item.ExibirAssento() == assento){
+            alert("Este assento já foi escolhido")
+            CreatePassagemArea()
+        }
+    }
+}
+
+function CreatePacoteViagem(){
+    let TodasPassagens = []
+    let PassagensDisponiveis = []
+    let MensagemErro = 0
+
+    if(Voos.length == 0 || Clientes.length == 0){
+        return alert("Nenhum Voo ou Cliente Cadastrado")
+    }
+
+    let titular = prompt("Qual o Titular do Pacote ?")
+    Clientes.forEach(VerificateNamePassageiro)
+
+    if(MensagemErro == 0){
+        return alert("Titular inválido")
+    }
+    
+    Voos.forEach(AddPassagens)
+
+    let passagemIda = prompt(`Voos: {${TodasPassagens}} Escolha a passagem de Ida `)
+
+    Voos.forEach(FindPassagensVolta)
+
+    let passagemVolta = prompt(`Voos: {${PassagensDisponiveis}} Escolha a passagem de Volta`)
+
+    let valorTotal = Passagens[0].CalcularValor()
+
+    alert(Passagens[0].CalcularValor())
+
+    let NewPacote = new PacoteViagem(titular, passagemIda, passagemVolta, valorTotal)
+
+    Pacotes.push(NewPacote)
+
+    function FindPassagensVolta(item){
+        if(item.ExibirNumero() == passagemIda){
+            let ValorParametro = item.ExibirLocalDestino()
+
+            Voos.forEach(Finder)
+
+            function Finder(valor){
+                if(valor.ExibirLocalPartida() == ValorParametro){
+                    PassagensDisponiveis.push(valor.ExibirNumero())
+                }
+            }
+
+        }
+    }
+    
+    function AddPassagens(item){
+        TodasPassagens.push(item.ExibirNumero())
+    }
+
+    function VerificateNamePassageiro(item){
+        if(item.ExibirNomeCliente() == titular){
+            MensagemErro++
+        }
+    }
+
+    
 }
 
