@@ -249,7 +249,7 @@ class PassagemArea{
     }
 
     ExibirResumo(destino){
-        return alert(`Passageiro: ${this.#Passageiro} No Assento: ${this.#Assento} do Voo: ${this.#Voo} Com Destino para: ${destino} !`)
+        return alert(`Passageiro: ${this.#Passageiro.ExibirNomeCliente()} No Assento: ${this.#Assento} do Voo: ${this.#Voo.ExibirNumero()} Com Destino para: ${destino} !`)
     }
 }
 
@@ -343,9 +343,10 @@ function CreatePassagemArea(){
         return alert("Nome Inválido")
     }
 
-    function VerificateName(item){
+    function VerificateName(item, index){
         if(item.ExibirNomeCliente() == passageiro){
             ExibirErro++
+            passageiro = Clientes[index]
             voo = prompt("Qual o número do Voo ?")
 
             Voos.forEach(VerificateVoo)
@@ -355,13 +356,12 @@ function CreatePassagemArea(){
 
     function VerificateVoo(item, index){
         if(item.ExibirNumero() == voo){
+            voo = Voos[index]
             let Origem = item.ExibirLocalPartida()
             let Destino = item.ExibirLocalDestino()
 
             let NewPassagemArea = new PassagemArea(assento, primeiraClasse, valor, passageiro, voo)
-            let NewPacote = new PacoteViagem(passageiro, Origem, Destino, valor)
     
-            Pacotes.push(NewPacote)
             Passagens.push(NewPassagemArea)
 
             alert(NewPassagemArea.CalcularValor())
@@ -394,7 +394,6 @@ function CreatePacoteViagem(){
 
     let titular = prompt("Qual o Titular do Pacote ?")
     Clientes.forEach(VerificateNamePassageiro)
-
     if(MensagemErro == 0){
         return alert("Titular inválido")
     }
@@ -407,6 +406,8 @@ function CreatePacoteViagem(){
 
     let passagemVolta = prompt(`Voos: {${PassagensDisponiveis}} Escolha a passagem de Volta`)
 
+    Voos.forEach(VerificatePassagemVolta)
+
     let valorTotal = Passagens[0].CalcularValor()
 
     alert(Passagens[0].CalcularValor())
@@ -415,8 +416,9 @@ function CreatePacoteViagem(){
 
     Pacotes.push(NewPacote)
 
-    function FindPassagensVolta(item){
+    function FindPassagensVolta(item, index){
         if(item.ExibirNumero() == passagemIda){
+            passagemIda = Voos[index]
             let ValorParametro = item.ExibirLocalDestino()
 
             Voos.forEach(Finder)
@@ -434,12 +436,17 @@ function CreatePacoteViagem(){
         TodasPassagens.push(item.ExibirNumero())
     }
 
-    function VerificateNamePassageiro(item){
+    function VerificateNamePassageiro(item, index){
         if(item.ExibirNomeCliente() == titular){
             MensagemErro++
+            return titular = Clientes[index]
         }
     }
 
-    
+    function VerificatePassagemVolta(item, index){
+        if(item.ExibirNumero() == passagemVolta){
+            return passagemVolta = Voos[index]
+        }
+    }
 }
 
